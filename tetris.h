@@ -24,6 +24,11 @@ void exibir(){
 			if(campo[i][j].ocupado) printf("%c ", 219);
 			else printf("%c ", 176);
 		}
+		printf("        ");
+		for (int j=0;j<BASE;j++){
+			if(campo[i][j].figura) printf("%c ", 219);
+			else printf("%c ", 176);
+		}
 		printf("\n");
 	}
 	printf("\n\n\n\n\n");
@@ -83,8 +88,7 @@ bool blocoOcupado(int direcao){
 		break;
 	case BAIXO:
 		for (int i = 0; i < 4; i++){
-			if (figura_atual.y[i]==19) return true;//toca o fundo
-			if (campo[figura_atual.y[i]+1][figura_atual.x[i]].ocupado) return true;//toca uma peca
+			if (figura_atual.y[i]==19 || (campo[figura_atual.y[i]+1][figura_atual.x[i]].ocupado && !campo[figura_atual.y[i]+1][figura_atual.x[i]].figura)) return true;//toca o fundo
 		}
 		break;
 	case ESQUERDA:
@@ -114,13 +118,16 @@ void fixaFigura(){
 }
 
 void geraFigura(){
-	inserirFigura(rand()%7); 
+	int n = rand()%7;
+	inserirFigura(n); 
 }
 
 void descerFigura(){
-	mover(BAIXO);
 	if(blocoOcupado(BAIXO)){
 		fixaFigura();
+		geraFigura();
+	}else{
+		mover(BAIXO);
 	}
-	geraFigura();
+	atualizarFigura();
 }
