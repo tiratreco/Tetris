@@ -8,6 +8,9 @@
 bloco campo[ALTURA][BASE];
 figura figura_atual;
 
+
+#include "visual.h"
+
 void iniciar (){
 	for (int i=0;i<ALTURA;i++){
 		for (int j=0;j<BASE;j++){
@@ -16,6 +19,10 @@ void iniciar (){
 			campo[i][j].cor = BRANCO;
 		}
 	}
+	preencherPontos();
+	preencherFaces();
+	calcularNormaisVertices();
+	calcularNormaisFaces();
 }
 
 void exibir(){

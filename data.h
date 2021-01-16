@@ -18,10 +18,18 @@
 #define CIMA 3
 #define BAIXO 4
 
+#define BASE 10
+#define ALTURA 20
+
+
 //base: 10 blocos
 //altura: 20 blocos
 
 typedef struct bloco{
+	GLfloat	pontos[8][3];
+	GLfloat	vertex_normals[8][3];
+	GLfloat face_normals[12][3];
+	GLuint faces[12][3];
 	bool ocupado;
 	bool figura;
 	int cor;
@@ -33,6 +41,7 @@ typedef struct figura{
 	int tipo;
 	int cor;
 }figura;
+
 
 const float cores[5][3] = {
 	{0.0, 0.0, 0.0 }, //preto
@@ -51,7 +60,3 @@ figura figuras[7] = {
     {{3, 4, 4, 5},{0, 0, 1, 1}, EDIREITA, PRETO},
     {{3, 4, 4, 5},{1, 1, 0, 1}, PIRAMIDE, PRETO}
 };
-
-
-#define BASE 10
-#define ALTURA 20
