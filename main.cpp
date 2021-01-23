@@ -14,7 +14,7 @@
 #include <time.h>
 #include "tetris.h"
     
-int mseg = 1000;
+int mseg = 1;
 
 /**********************************************************************/
 /*                  Declaração de funções forward                     */
@@ -81,9 +81,9 @@ void init_glut(const char *nome_janela, int argc, char** argv){
 	glutTimerFunc(mseg, timer_callback,mseg);
 
     /* Inicia a iluminação */
-    GLfloat light_position[] = {15.0, -5.0, -50.0, 1.0};
-	GLfloat light_color[] = {1.0, 1.0, 1.0, 0.0};
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_color);
+    GLfloat light_position[] = {30, 30, 0, -10};
+	GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
+    glLightfv(GL_LIGHT0, GL_AMBIENT_AND_DIFFUSE, light_color);
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -105,7 +105,6 @@ void init_glut(const char *nome_janela, int argc, char** argv){
     glClearColor(1.0, 1.0, 1.0, 1.0);
 
     /* define a cor de desenho inicial (azul) */
-    glColor3f(0.0, 0.0, 1.0);
 }
 
 /*
@@ -151,9 +150,10 @@ void draw_object_smooth(void){
 			for (int j=0;j<BASE;j++){
         		for (k=0; k<12; k++){
         			if (campo[i][j].ocupado){
+						glColor3f(cores[campo[i][j].cor][0], cores[campo[i][j].cor][1], cores[campo[i][j].cor][2]);
 			            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][0]]);
 			            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][0]]);
-			
+						
 			            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][1]]);
 			            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][1]]);
 			
@@ -187,21 +187,12 @@ void info_modotexto(){
 }
 
 void keyboard_callback(unsigned char key, int x, int y){
-	printf("%c", key);
-	switch(key){
-		case 27:
-			 exit(0);
-			 break;
-		 case 'a':
-		 	mover(ESQUERDA);
-		 	break;
-		 case 'd':
-		 	mover(DIREITA);
-		 	break;
-		 case 'w':
-		 	rotacionar();
-		 	break;
-	}
+	if (key == 27) exit(0);
+	else if (key == 'a' || key == 'A') mover(ESQUERDA);
+	else if (key == 'd' || key == 'D') mover(DIREITA);
+	else if (key == 's' || key == 'S') descerFigura();
+	else if (key == 'w' || key == 'W') rotacionar();
+	
 	atualizarFigura();
 }
 

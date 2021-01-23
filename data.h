@@ -1,9 +1,13 @@
 
-#define PRETO 1
-#define VERMELHO 2
-#define AZUL 3
-#define VERDE 4
-#define BRANCO 5
+#define PRETO 0
+#define VERMELHO 1
+#define AZUL 2
+#define VERDE 3
+#define BRANCO 4
+#define AMARELO 5
+#define LARANJA 6
+#define CIANO 7
+#define ROXO 8
 
 #define QUADRADO 0
 #define LINHA 1
@@ -43,21 +47,24 @@ typedef struct figura{
 }figura;
 
 
-const float cores[5][3] = {
+const GLfloat cores[9][3] = {
 	{0.0, 0.0, 0.0 }, //preto
 	{1.0, 0.0, 0.0 }, //vermelho
 	{0.0, 0.0, 1.0 }, //azul
 	{0.0, 1.0, 0.0 }, //verde
-	{1.0, 1.0, 1.0 }  //branco
+	{1.0, 1.0, 1.0 }, //branco
+	{1.0, 1.0, 0.0 }, //amarelo
+	{1.0, 0.7, 0.0 }, //laranja
+	{0.0, 1.0, 1.0 }, //ciano
+	{1.0, 0.0, 1.0 } //roxo
 };
 
 figura figuras[7] = {
-    {{4, 5, 4, 5},{0, 0, 1, 1}, QUADRADO, PRETO},
-    {{3, 4, 5, 6},{1, 1, 1, 1}, LINHA, PRETO},
-    {{3, 3, 4, 5},{0, 1, 1, 1}, LESQUERDA, PRETO},
-    {{4, 5, 6, 6},{1, 1, 1, 0}, LDIREITA, PRETO},
-    {{4, 5, 5, 6},{1, 1, 0, 0}, EESQUERDA, PRETO},
-    {{3, 4, 4, 5},{0, 0, 1, 1}, EDIREITA, PRETO},
-    {{3, 4, 4, 5},{1, 1, 0, 1}, PIRAMIDE, PRETO}
+    {{4, 5, 4, 5},{0, 0, 1, 1}, QUADRADO, AMARELO},
+    {{3, 4, 5, 6},{1, 1, 1, 1}, LINHA, CIANO},
+    {{3, 3, 4, 5},{0, 1, 1, 1}, LESQUERDA, AZUL},
+    {{4, 5, 6, 6},{1, 1, 1, 0}, LDIREITA, LARANJA},
+    {{4, 5, 5, 6},{1, 1, 0, 0}, EESQUERDA, VERMELHO},
+    {{3, 4, 4, 5},{0, 0, 1, 1}, EDIREITA, VERDE},
+    {{3, 4, 4, 5},{1, 1, 0, 1}, PIRAMIDE, ROXO}
 };
-

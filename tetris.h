@@ -7,6 +7,9 @@
 
 bool blocoOcupado(int);
 
+clock_t tempo;
+int velocidade = 1000; //velocidade em milissegundos
+
 bloco campo[ALTURA][BASE];
 figura figura_atual;
 int pontos;
@@ -57,6 +60,7 @@ void atualizarFigura(){
 	for (int i=0;i<4;i++){
 		campo[figura_atual.y[i]][figura_atual.x[i]].ocupado = true;
 		campo[figura_atual.y[i]][figura_atual.x[i]].figura = true;
+		campo[figura_atual.y[i]][figura_atual.x[i]].cor = figura_atual.cor;
 	}
 }
 
@@ -96,7 +100,6 @@ bool blocoOcupado(int direcao){
 }
 
 void mover(int direcao){
-	printf("%d", direcao);
 	if (blocoOcupado(direcao)) return;
 	switch (direcao){
 	case CIMA:
@@ -112,46 +115,55 @@ void mover(int direcao){
 	case ESQUERDA:
 		for (int i = 0; i < 4; i++){
 			figura_atual.x[i]--;
-			printf("esquerda");
 		}
 		break;
 	case DIREITA:
 		for (int i = 0; i < 4; i++){
 			figura_atual.x[i]++;
-			printf("DIREITA");
 		}
 		break;
 	default:
-		printf("default");
 		break;
 	}
 }
 
 void rotacionar(){
+	int backup[2][4];
 	int x_pivo = figura_atual.x[1];
 	int y_pivo = figura_atual.y[1];
 	int x_des, y_des;
+	bool ok = true;
+	
+	for (int i=0; i<4; i++){
+		backup[0][i]=figura_atual.x[i];
+		backup[1][i]=figura_atual.y[i];
+	}
+	
 	switch(figura_atual.tipo){
 	case QUADRADO:
 		break;
-	case LINHA:
+	default:
 		for (int i = 0; i < 4; i++){
 			int aux = figura_atual.y[i];
 			figura_atual.y[i]=figura_atual.x[i];
-			figura_atual.x[i]=aux;
+			(figura_atual.tipo==LINHA)? figura_atual.x[i]=aux : figura_atual.x[i]=-aux;
 		}
 		x_des = figura_atual.x[1] - x_pivo;
 		y_des = figura_atual.y[1] - y_pivo;
-		for(int i = 0; i < 4; i++){{
-			figura_atual.y[i]-=x_des;
-			figura_atual.x[i]-=y_des;
+		for(int i = 0; i < 4; i++){
+			if (figura_atual.y[i]-y_des>19 || figura_atual.x[i]-x_des>9 || figura_atual.y[i]-y_des<0 || figura_atual.x[i]-x_des<0 || (campo[figura_atual.y[i]-y_des][figura_atual.x[i]-x_des].ocupado && !campo[figura_atual.y[i]-y_des][figura_atual.x[i]-x_des].figura)) ok = false;
+			figura_atual.y[i]-=y_des;
+			figura_atual.x[i]-=x_des;
 		}
 		break;
-	default:
-		break;
+	}
+	if (!ok){
+		for (int i=0; i<4; i++){
+			figura_atual.x[i]=backup[0][i];
+			figura_atual.y[i]=backup[1][i];
+		}
 	}
 }
-
 
 void fixaFigura(){
 	for (int i = 0; i < 4; i++){
@@ -162,8 +174,8 @@ void fixaFigura(){
 }
 
 void geraFigura(){
-	//int n = rand()%7;
-	inserirFigura(LINHA); 
+	int n = rand()%7;
+	inserirFigura(n); 
 }
 
 int tiraLinhas(){
@@ -183,6 +195,8 @@ int tiraLinhas(){
 			}
 			for (int k=i;k>0;k--) for (int j=0;j<BASE;j++) {//FALTA COPIAR COR
 				if (campo[k-1][j].ocupado){
+					campo[k][j].cor = campo[k-1][j].cor;
+					campo[k-1][j].cor = BRANCO;
 					campo[k-1][j].ocupado = false;
 					campo[k][j].ocupado = true;
 				}
@@ -205,13 +219,14 @@ void descerFigura(){
 }
 
 void jogo(){
+	if (clock() - tempo < velocidade)return;
 	if (estado==0) {
 		iniciar();
 		geraFigura();
 		return;
 	}
 	descerFigura();
-	//Sleep(1000);
-	exibir();
 	
+	//exibir();
+	tempo = clock();
 }

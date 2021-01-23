@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout>
 	<Files>
-		<File Name="main.cpp" Top="Yes" Tabpos="2" TopLine="67">
-			<Cursor Line="83" Column="30"/>
+		<File Name="main.cpp" Top="No" Tabpos="1" TopLine="72">
+			<Cursor Line="86" Column="29"/>
 		</File>
-		<File Name="tetris.h" Top="No" Tabpos="3" TopLine="95">
-			<Cursor Line="95" Column="9"/>
+		<File Name="tetris.h" Top="Yes" Tabpos="2" TopLine="178">
+			<Cursor Line="22" Column="6"/>
+			<Selection Line="22" Column="13"/>
 		</File>
-		<File Name="data.h" Top="No" Tabpos="4" TopLine="9">
-			<Cursor Line="16" Column="18"/>
-			<Selection Line="16" Column="13"/>
+		<File Name="data.h" Top="No" Tabpos="3" TopLine="17">
+			<Cursor Line="71" Column="1"/>
 		</File>
-		<File Name="visual.h" Top="No" Tabpos="5" TopLine="1">
+		<File Name="visual.h" Top="No" Tabpos="4" TopLine="1">
 			<Cursor Line="5" Column="21"/>
 		</File>
 	</Files>
