@@ -109,29 +109,29 @@ void calcularNormaisFaces(){
 		        x[0] = campo[i][j].pontos[campo[i][j].faces[k][0]][0];
 		        y[0] = campo[i][j].pontos[campo[i][j].faces[k][0]][1];
 		        z[0] = campo[i][j].pontos[campo[i][j].faces[k][0]][2];
-		    
+
 		        x[1] = campo[i][j].pontos[campo[i][j].faces[k][1]][0];
 		        y[1] = campo[i][j].pontos[campo[i][j].faces[k][1]][1];
 		        z[1] = campo[i][j].pontos[campo[i][j].faces[k][1]][2];
-		    
+
 		        x[2] = campo[i][j].pontos[campo[i][j].faces[k][2]][0];
 		        y[2] = campo[i][j].pontos[campo[i][j].faces[k][2]][1];
 		        z[2] = campo[i][j].pontos[campo[i][j].faces[k][2]][2];
-		        
+
 		        a.x = x[2]- x[0];
 		        a.y = y[2]- y[0];
 		        a.z = z[2]- z[0];
-		        
+
 		        b.x = x[2]- x[1];
 		        b.y = y[2]- y[1];
 		        b.z = z[2]- z[1];
-		        
+
 		        n.x = a.y * b.z - a.z * b.y;
 		        n.y = a.z * b.x - a.x * b.z;
 		        n.z = a.x * b.y - a.y * b.x;
-		       
+
 		        normalizar(&n);
-		        
+
 		        campo[i][j].face_normals[k][0] = n.x;
 		        campo[i][j].face_normals[k][1] = n.y;
 		        campo[i][j].face_normals[k][2] = n.z;

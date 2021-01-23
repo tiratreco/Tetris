@@ -60,3 +60,4 @@ figura figuras[7] = {
     {{3, 4, 4, 5},{0, 0, 1, 1}, EDIREITA, PRETO},
     {{3, 4, 4, 5},{1, 1, 0, 1}, PIRAMIDE, PRETO}
 };
+
