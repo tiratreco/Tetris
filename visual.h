@@ -1,8 +1,8 @@
 #include <math.h>
 
 
-#define Z_FUNDO -20
-#define Z_FRENTE -19
+#define Z_FUNDO 0
+#define Z_FRENTE 1
 
 struct ponto{
     float x;
@@ -10,6 +10,7 @@ struct ponto{
     float z;
 };
   
+
 
 void preencherPontos(){
 	for (int i=0;i<ALTURA;i++){
@@ -121,15 +122,15 @@ void calcularNormaisFaces(){
 		        a.x = x[2]- x[0];
 		        a.y = y[2]- y[0];
 		        a.z = z[2]- z[0];
-
+		        
 		        b.x = x[2]- x[1];
 		        b.y = y[2]- y[1];
 		        b.z = z[2]- z[1];
-
+		        
 		        n.x = a.y * b.z - a.z * b.y;
 		        n.y = a.z * b.x - a.x * b.z;
 		        n.z = a.x * b.y - a.y * b.x;
-
+		       
 		        normalizar(&n);
 
 		        campo[i][j].face_normals[k][0] = n.x;

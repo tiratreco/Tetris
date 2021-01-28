@@ -15,13 +15,15 @@
 #include "tetris.h"
     
 int mseg = 1;
+GLfloat perspectiva[4] = {16, 0, 1.0, 100.0};
+GLfloat camera[9] = {-32.0, 5.0, 45.0, 10.0, 5.0, 0.0, -99999.0, -3.0, -10.0};
+int indice = 0;
 
 /**********************************************************************/
 /*                  Declaração de funções forward                     */
 /**********************************************************************/
 void init_glut(const char *window_name, int argc, char** argv);
 void draw_object_smooth(void);
-void draw_object_flat(void);
 void display_callback(void);
 void reshape_callback(int w, int h);
 void animate_callback(void);
@@ -39,7 +41,6 @@ int main(int argc, char** argv){
     
 	srand(time(NULL));
 	iniciar();
-	geraFigura();
 	
     info_modotexto();
    /* inicia o GLUT e alguns parâmetros do OpenGL */
@@ -71,38 +72,55 @@ void init_glut(const char *nome_janela, int argc, char** argv){
     glutInitWindowSize(640,480);
     glutInitWindowPosition(100,100);
     glutCreateWindow(nome_janela);
+	glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    
+    
+        /* Ativa o modelo de sombreagem de "Gouraud". */
+    glShadeModel(GL_SMOOTH);
+
+    /* Ativa o z-buffering, de modo a remover as superfícies escondidas */
+    glEnable(GL_DEPTH_TEST);  
+ 	glEnable(GL_COLOR_MATERIAL);
+
 
     /* define as funcões de callback */
     glutKeyboardFunc(keyboard_callback);
     glutDisplayFunc(display_callback);
     glutReshapeFunc(reshape_callback);
 
-//    glutIdleFunc(animate_callback);
+    glutIdleFunc(animate_callback);
 	glutTimerFunc(mseg, timer_callback,mseg);
 
     /* Inicia a iluminação */
-    GLfloat light_position[] = {30, 30, 0, -10};
-	GLfloat light_color[] = {1.0, 1.0, 1.0, 1.0};
-    glLightfv(GL_LIGHT0, GL_AMBIENT_AND_DIFFUSE, light_color);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
+    GLfloat light_position[4] = {0.0, 5.0, 45.0, 0.0}; //posição da luz
+	GLfloat light_color[4] = {1.0, 1.0, 1.0, 1.0};//luz ambiente
+	GLfloat diffuse[4] = {0.7, 0.7 , 0.7, 1.0};//luz difusa
+	GLfloat luzEspecular[4] = {1.0, 1.0, 1.0, 1.0};//luz especular
+	GLfloat especularidade[4] = {1.0, 1.0, 1.0, 1.0};// Capacidade de brilho do material
+	
+	GLint especMaterial = 60;	
 
 
     /* Inicia as características gerais dos materiais */
-	GLfloat mat_ambient_diffuse[] = {1.0, 1.0, 1.0, 1.0};
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_ambient_diffuse);
-    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-    glEnable(GL_COLOR_MATERIAL);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, especularidade);//refletância do material
+	glMateriali(GL_FRONT, GL_SHININESS, especMaterial);//concentração do brilho
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,cores[PRETO]);
+    glMaterialfv(GL_FRONT, GL_SPECULAR,cores[PRETO]);
+	
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light_color); //ativa a luz ambiente
 
-    /* Ativa o modelo de sombreagem de "Gouraud". */
-    glShadeModel(GL_SMOOTH);
+	//parametros da luz de numero 0
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light_color);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse );
+	glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular );
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position );
+	
 
-    /* Ativa o z-buffering, de modo a remover as superfícies escondidas */
-    glEnable(GL_DEPTH_TEST);
+
 
     /* define a cor com a qual o ecrã será apagado */
-    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
 
     /* define a cor de desenho inicial (azul) */
 }
@@ -116,14 +134,14 @@ void reshape_callback(int w, int h){
     glLoadIdentity();
 
     /* define a zona da janela onde se vai desenhar */
-    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
+    glViewport (5, 0, (GLsizei) w, (GLsizei) h);
 	
     /* Define a forma do "viewing volume" para termos *
      * uma projecção de perspectiva (3D).             */
-    gluPerspective(20, (float)w/(float)h, 1.0, 100.0);
+    gluPerspective(perspectiva[0],(float)w/(float)h,perspectiva[2],perspectiva[3]);
 
 	/* Transformação de visão */
-    gluLookAt (-15.0, 5.0, 50.0, 3.0, 4.0, 0.0, -99999.0, -3.0, -10.0);
+    gluLookAt (camera[0],camera[1],camera[2],camera[3],camera[4],camera[5],camera[6],camera[7],camera[8]);
 
     /* muda para o modo GL_MODELVIEW (não pretendemos alterar a projecção
      * quando estivermos a desenhar no display) */
@@ -133,8 +151,24 @@ void reshape_callback(int w, int h){
 
 void timer_callback(int value){
     glutTimerFunc(value, timer_callback, value);
-    glutPostRedisplay(); // Manda redesenhar o display em cada frame
+    
     jogo();
+    glutPostRedisplay(); // Manda redesenhar o display em cada frame
+}
+
+void mudarPerspectiva (char botao){
+	
+	if(botao == 'w')
+		camera[indice]++;
+	else if (botao == 's')
+		camera[indice]--;
+	else if (botao == 'a')
+		indice--;
+	else if (botao == 'd')
+		indice++;
+	
+	printf("%d  ", indice);
+	printf("%.2f\n", camera[indice]);
 }
   
 /*
@@ -145,12 +179,15 @@ void draw_object_smooth(void){
     GLuint k;
 
     /* Desenha todos os triângulos do objeto */
-    glBegin(GL_TRIANGLES);
+    
     	for (int i=0;i<ALTURA;i++){
 			for (int j=0;j<BASE;j++){
+				glBegin(GL_TRIANGLES);
         		for (k=0; k<12; k++){
         			if (campo[i][j].ocupado){
 						glColor3f(cores[campo[i][j].cor][0], cores[campo[i][j].cor][1], cores[campo[i][j].cor][2]);
+						
+						
 			            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][0]]);
 			            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][0]]);
 						
@@ -161,17 +198,18 @@ void draw_object_smooth(void){
 			            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][2]]);
 					}
 				}
+    			glEnd();
 			}
         }
-    glEnd();
 }
 
 void display_callback(void){
     
+	gluLookAt (camera[0],camera[1],camera[2],camera[3],camera[4],camera[5],camera[6],camera[7],camera[8]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     draw_object_smooth();    
-
+	
     glutSwapBuffers();
 }
 
@@ -188,10 +226,15 @@ void info_modotexto(){
 
 void keyboard_callback(unsigned char key, int x, int y){
 	if (key == 27) exit(0);
-	else if (key == 'a' || key == 'A') mover(ESQUERDA);
-	else if (key == 'd' || key == 'D') mover(DIREITA);
-	else if (key == 's' || key == 'S') descerFigura();
-	else if (key == 'w' || key == 'W') rotacionar();
+	//else if (key == 'a' || key == 'A') mover(ESQUERDA);
+	//else if (key == 'd' || key == 'D') mover(DIREITA);
+	//else if (key == 's' || key == 'S') descerFigura();
+	//else if (key == 'w' || key == 'W') rotacionar();
+	
+	else if (key == 'a' || key == 'A') mudarPerspectiva ('a');
+	else if (key == 'd' || key == 'D') mudarPerspectiva ('d');
+	else if (key == 's' || key == 'S') mudarPerspectiva ('s');
+	else if (key == 'w' || key == 'W') mudarPerspectiva ('w');
 	
 	atualizarFigura();
 }

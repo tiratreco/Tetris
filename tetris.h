@@ -8,7 +8,7 @@
 bool blocoOcupado(int);
 
 clock_t tempo;
-int velocidade = 1000; //velocidade em milissegundos
+int velocidade = 100; //velocidade em milissegundos
 
 bloco campo[ALTURA][BASE];
 figura figura_atual;
@@ -29,6 +29,7 @@ void iniciar (){
 			campo[i][j].cor = BRANCO;
 		}
 	}
+	campo[0][0].ocupado = true;
 	preencherPontos();
 	preencherFaces();
 	calcularNormaisVertices();
@@ -210,8 +211,8 @@ int tiraLinhas(){
 void descerFigura(){
 	if(blocoOcupado(BAIXO)){
 		fixaFigura();
-		pontos += tiraLinhas();
-		geraFigura();
+		//pontos += tiraLinhas();
+		//geraFigura();
 	}else{
 		mover(BAIXO);
 	}
@@ -222,7 +223,7 @@ void jogo(){
 	if (clock() - tempo < velocidade)return;
 	if (estado==0) {
 		iniciar();
-		geraFigura();
+		//geraFigura();
 		return;
 	}
 	descerFigura();
