@@ -1,3 +1,9 @@
+#define MENU 0
+#define INICIANDO 1
+#define EM_JOGO 2
+#define FIM 3
+
+
 
 #define PRETO 0
 #define VERMELHO 1
@@ -8,6 +14,7 @@
 #define LARANJA 6
 #define CIANO 7
 #define ROXO 8
+#define ESCURO 9//deve ser sempre o ultimo
 
 #define QUADRADO 0
 #define LINHA 1
@@ -47,7 +54,7 @@ typedef struct figura{
 }figura;
 
 
-const GLfloat cores[9][3] = {
+const GLfloat cores[ESCURO*2][3] = {
 	{0.0, 0.0, 0.0 }, //preto
 	{1.0, 0.0, 0.0 }, //vermelho
 	{0.0, 0.0, 1.0 }, //azul
@@ -56,7 +63,17 @@ const GLfloat cores[9][3] = {
 	{1.0, 1.0, 0.0 }, //amarelo
 	{1.0, 0.7, 0.0 }, //laranja
 	{0.0, 1.0, 1.0 }, //ciano
-	{1.0, 0.0, 1.0 } //roxo
+	{1.0, 0.0, 1.0 }, //roxo
+		//escuros:
+	{0.0, 0.0, 0.0 }, //preto
+	{0.4, 0.0, 0.0 }, //vermelho
+	{0.0, 0.0, 0.4 }, //azul
+	{0.0, 0.4, 0.0 }, //verde
+	{0.4, 0.4, 0.5 }, //branco
+	{0.4, 0.4, 0.0 }, //amarelo
+	{0.5, 0.3, 0.0 }, //laranja
+	{0.0, 0.4, 0.4 }, //ciano
+	{0.4, 0.0, 0.4 } //roxo
 };
 
 figura figuras[7] = {

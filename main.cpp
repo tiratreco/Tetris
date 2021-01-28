@@ -40,7 +40,6 @@ void info_modotexto();
 int main(int argc, char** argv){
     
 	srand(time(NULL));
-	iniciar();
 	
     info_modotexto();
    /* inicia o GLUT e alguns parâmetros do OpenGL */
@@ -111,7 +110,7 @@ void init_glut(const char *nome_janela, int argc, char** argv){
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, light_color); //ativa a luz ambiente
 
 	//parametros da luz de numero 0
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_color);
+	//glLightfv(GL_LIGHT0, GL_AMBIENT, light_color);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse );
 	glLightfv(GL_LIGHT0, GL_SPECULAR, luzEspecular );
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position );
@@ -152,8 +151,9 @@ void reshape_callback(int w, int h){
 void timer_callback(int value){
     glutTimerFunc(value, timer_callback, value);
     
-    jogo();
     glutPostRedisplay(); // Manda redesenhar o display em cada frame
+    
+    jogo();
 }
 
 void mudarPerspectiva (char botao){
@@ -176,35 +176,35 @@ void mudarPerspectiva (char botao){
  * normais de cada vértice (ideal para usar com Gouraud shading).
  */
 void draw_object_smooth(void){
-    GLuint k;
-
-    /* Desenha todos os triângulos do objeto */
+	
+	
     
-    	for (int i=0;i<ALTURA;i++){
-			for (int j=0;j<BASE;j++){
-				glBegin(GL_TRIANGLES);
-        		for (k=0; k<12; k++){
-        			if (campo[i][j].ocupado){
+	for (int i=0;i<ALTURA;i++){
+		for (int j=0;j<BASE;j++){
+			glBegin(GL_TRIANGLES);
+    		for (int k=0; k<12; k++){
+    			if (campo[i][j].ocupado){
+    				if (k==6 || k==7 || k==8 || k==9)
+    					glColor3f(cores[campo[i][j].cor+ESCURO][0], cores[campo[i][j].cor+ESCURO][1], cores[campo[i][j].cor+ESCURO][2]);
+					else
 						glColor3f(cores[campo[i][j].cor][0], cores[campo[i][j].cor][1], cores[campo[i][j].cor][2]);
-						
-						
-			            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][0]]);
-			            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][0]]);
-						
-			            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][1]]);
-			            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][1]]);
-			
-			            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][2]]);
-			            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][2]]);
-					}
+					
+		            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][0]]);
+		            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][0]]);
+					
+		            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][1]]);
+		            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][1]]);
+		
+		            glNormal3fv(campo[i][j].vertex_normals[campo[i][j].faces[k][2]]);
+		            glVertex3fv(campo[i][j].pontos[campo[i][j].faces[k][2]]);
 				}
-    			glEnd();
 			}
-        }
+			glEnd();
+		}
+    }
 }
 
 void display_callback(void){
-    
 	gluLookAt (camera[0],camera[1],camera[2],camera[3],camera[4],camera[5],camera[6],camera[7],camera[8]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
@@ -226,15 +226,16 @@ void info_modotexto(){
 
 void keyboard_callback(unsigned char key, int x, int y){
 	if (key == 27) exit(0);
-	//else if (key == 'a' || key == 'A') mover(ESQUERDA);
-	//else if (key == 'd' || key == 'D') mover(DIREITA);
-	//else if (key == 's' || key == 'S') descerFigura();
-	//else if (key == 'w' || key == 'W') rotacionar();
+	else if (key == 'a' || key == 'A') mover(ESQUERDA);
+	else if (key == 'd' || key == 'D') mover(DIREITA);
+	else if (key == 's' || key == 'S') descerFigura();
+	else if (key == 'w' || key == 'W') rotacionar();
+	else if (key == ' ') estado = INICIANDO;
 	
-	else if (key == 'a' || key == 'A') mudarPerspectiva ('a');
-	else if (key == 'd' || key == 'D') mudarPerspectiva ('d');
-	else if (key == 's' || key == 'S') mudarPerspectiva ('s');
-	else if (key == 'w' || key == 'W') mudarPerspectiva ('w');
+	//else if (key == 'a' || key == 'A') mudarPerspectiva ('a');
+	//else if (key == 'd' || key == 'D') mudarPerspectiva ('d');
+	//else if (key == 's' || key == 'S') mudarPerspectiva ('s');
+	//else if (key == 'w' || key == 'W') mudarPerspectiva ('w');
 	
 	atualizarFigura();
 }

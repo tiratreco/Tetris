@@ -1,16 +1,96 @@
 #include <math.h>
 
-
 #define Z_FUNDO 0
 #define Z_FRENTE 1
+
+
+float xa = -5;
+float ya = 0;
+float xb = -5;
+float yb = 19;
+float xc = 14;
+float yc = 0;
+float xd = 14;
+float yd = 19;
+float xe = -5;
+float ye = 24;
+float xf = 14;
+float yf = 24;
 
 struct ponto{
     float x;
     float y;
     float z;
 };
-  
 
+struct moldura{
+	GLfloat	pontos[10][3];
+	GLfloat	vertex_normals[16][3];
+	GLfloat face_normals[12][3];
+	GLuint faces[6][3];
+	int cor;
+};
+
+moldura moldura;
+
+void preencherMolduras(){
+	moldura.pontos[0][0] = ya;
+	moldura.pontos[0][1] = xa;
+	moldura.pontos[0][2] = Z_FRENTE;
+	moldura.pontos[1][0] = 0;
+	moldura.pontos[1][1] = 0;
+	moldura.pontos[1][2] = Z_FRENTE;
+	moldura.pontos[2][0] = 0;
+	moldura.pontos[2][1] = 9;
+	moldura.pontos[2][2] = Z_FRENTE;
+	moldura.pontos[3][0] = yc;
+	moldura.pontos[3][1] = xc;
+	moldura.pontos[3][2] = Z_FRENTE;
+	moldura.pontos[4][0] = yb;
+	moldura.pontos[4][1] = xb;
+	moldura.pontos[4][2] = Z_FRENTE;
+	moldura.pontos[5][0] = 19;
+	moldura.pontos[5][1] = 0;
+	moldura.pontos[5][2] = Z_FRENTE;
+	moldura.pontos[6][0] = 19;
+	moldura.pontos[6][1] = 9;
+	moldura.pontos[6][2] = Z_FRENTE;
+	moldura.pontos[7][0] = yd;
+	moldura.pontos[7][1] = xd;
+	moldura.pontos[7][2] = Z_FRENTE;
+	moldura.pontos[8][0] = ye;
+	moldura.pontos[8][1] = xe;
+	moldura.pontos[8][2] = Z_FRENTE;
+	moldura.pontos[9][0] = yf;
+	moldura.pontos[9][1] = xf;
+	moldura.pontos[9][2] = Z_FRENTE;
+	
+	
+	moldura.faces[0][0] = 0;
+	moldura.faces[0][1] = 4;
+	moldura.faces[0][2] = 1;
+	
+	moldura.faces[1][0] = 1;
+	moldura.faces[1][1] = 4;
+	moldura.faces[1][2] = 5;
+	
+	moldura.faces[2][0] = 2;
+	moldura.faces[2][1] = 6;
+	moldura.faces[2][2] = 3;
+	
+	moldura.faces[3][0] = 3;
+	moldura.faces[3][1] = 6;
+	moldura.faces[3][2] = 7;
+	
+	moldura.faces[4][0] = 4;
+	moldura.faces[4][1] = 8;
+	moldura.faces[4][2] = 7;
+	
+	moldura.faces[5][0] = 7;
+	moldura.faces[5][1] = 8;
+	moldura.faces[5][2] = 9;
+
+}
 
 void preencherPontos(){
 	for (int i=0;i<ALTURA;i++){
@@ -169,3 +249,13 @@ void calcularNormaisVertices(){
 		}
 	}
 }        
+
+void output(int x, int y, char *string){
+  int len, i;
+
+  glRasterPos2f(x, y);
+  len = (int) strlen(string);
+  for (i = 0; i < len; i++) {
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+  }
+}

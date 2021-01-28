@@ -8,7 +8,7 @@
 bool blocoOcupado(int);
 
 clock_t tempo;
-int velocidade = 100; //velocidade em milissegundos
+int velocidade = 500; //velocidade em milissegundos
 
 bloco campo[ALTURA][BASE];
 figura figura_atual;
@@ -17,10 +17,10 @@ int pontos;
 
 #include "visual.h"
 
-int estado = 0;
+int estado = MENU;
 
 void iniciar (){
-	estado = 1;
+	estado = EM_JOGO;
 	pontos = 0;
 	for (int i=0;i<ALTURA;i++){
 		for (int j=0;j<BASE;j++){
@@ -29,11 +29,10 @@ void iniciar (){
 			campo[i][j].cor = BRANCO;
 		}
 	}
-	campo[0][0].ocupado = true;
 	preencherPontos();
 	preencherFaces();
-	calcularNormaisVertices();
 	calcularNormaisFaces();
+	calcularNormaisVertices();
 }
 
 void exibir(){
@@ -211,8 +210,8 @@ int tiraLinhas(){
 void descerFigura(){
 	if(blocoOcupado(BAIXO)){
 		fixaFigura();
-		//pontos += tiraLinhas();
-		//geraFigura();
+		pontos += tiraLinhas();
+		geraFigura();
 	}else{
 		mover(BAIXO);
 	}
@@ -221,13 +220,16 @@ void descerFigura(){
 
 void jogo(){
 	if (clock() - tempo < velocidade)return;
-	if (estado==0) {
+	if (estado==INICIANDO) {
+		printf("%d", estado);
 		iniciar();
-		//geraFigura();
+		geraFigura();
 		return;
 	}
-	descerFigura();
-	
-	//exibir();
-	tempo = clock();
+	if (estado==EM_JOGO){
+		descerFigura();
+		printf("%d\n", pontos);
+		//exibir();
+		tempo = clock();
+	}
 }
