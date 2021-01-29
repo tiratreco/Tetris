@@ -33,6 +33,7 @@ void iniciar (){
 	preencherFaces();
 	calcularNormaisFaces();
 	calcularNormaisVertices();
+	preencherMolduras();
 }
 
 void exibir(){
