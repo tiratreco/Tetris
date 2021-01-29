@@ -3,6 +3,8 @@
 #define EM_JOGO 2
 #define FIM 3
 
+#define TEXTURE_WIDTH 512
+#define TEXTURE_HEIGHT 512
 
 
 #define PRETO 0

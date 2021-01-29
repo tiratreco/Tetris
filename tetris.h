@@ -13,15 +13,15 @@ int velocidade = 500; //velocidade em milissegundos
 bloco campo[ALTURA][BASE];
 figura figura_atual;
 int pontos;
+clock_t tempo_de_jogo;
+clock_t tempo_inicio;
 
 
 #include "visual.h"
 
 int estado = MENU;
 
-void iniciar (){
-	estado = EM_JOGO;
-	pontos = 0;
+void limparCampo (){
 	for (int i=0;i<ALTURA;i++){
 		for (int j=0;j<BASE;j++){
 			campo[i][j].ocupado = false;
@@ -29,11 +29,23 @@ void iniciar (){
 			campo[i][j].cor = BRANCO;
 		}
 	}
+}
+
+void carregar (){
+	estado = MENU;
+	limparCampo();
 	preencherPontos();
 	preencherFaces();
 	calcularNormaisFaces();
 	calcularNormaisVertices();
 	preencherMolduras();
+}
+
+void iniciar (){
+	limparCampo();
+	tempo_inicio = clock();
+	estado = EM_JOGO;
+	pontos = 0;
 }
 
 void exibir(){
@@ -65,13 +77,21 @@ void atualizarFigura(){
 	}
 }
 
-void inserirFigura(int id){
+bool inserirFigura(int id){
+	bool vivo = true;
+	for (int i=0;i<4;i++){
+		if(campo[figura_atual.x[i]][figura_atual.y[i]].ocupado){
+			tempo_de_jogo = clock()-tempo_inicio;
+			vivo = false;
+		}
+	}
 	for (int i=0;i<4;i++){
 		figura_atual.x[i] = figuras[id].x[i];
 		figura_atual.y[i] = figuras[id].y[i];
 	}
 	figura_atual.cor = figuras[id].cor;
 	figura_atual.tipo = figuras[id].tipo;
+	return vivo;
 }
 
 
@@ -174,9 +194,9 @@ void fixaFigura(){
 	};
 }
 
-void geraFigura(){
+bool geraFigura(){
 	int n = rand()%7;
-	inserirFigura(n); 
+	return inserirFigura(n);
 }
 
 int tiraLinhas(){
@@ -190,7 +210,8 @@ int tiraLinhas(){
 			}
 		}
 		if (apagar){
-			pontos++;
+			pontos++; 
+			velocidade*=0.98;
 			for (int j=0;j<BASE;j++) {
 				campo[i][j].ocupado = false;
 			}
@@ -209,28 +230,35 @@ int tiraLinhas(){
 }
 
 void descerFigura(){
+	bool vivo = true;
 	if(blocoOcupado(BAIXO)){
 		fixaFigura();
 		pontos += tiraLinhas();
-		geraFigura();
+		vivo = geraFigura();
 	}else{
 		mover(BAIXO);
 	}
 	atualizarFigura();
+	if (!vivo) estado = FIM;
 }
 
 void jogo(){
-	if (clock() - tempo < velocidade)return;
+	//printf("%d", estado);
 	if (estado==INICIANDO) {
-		printf("%d", estado);
+		//printf("%d", estado);
 		iniciar();
 		geraFigura();
 		return;
 	}
 	if (estado==EM_JOGO){
+		if (clock() - tempo < velocidade)return;
 		descerFigura();
-		printf("%d\n", pontos);
-		//exibir();
+		//printf("%d\n", pontos);
+		exibir();
 		tempo = clock();
+		return;
+	}
+	if (estado==FIM){
+		return;
 	}
 }

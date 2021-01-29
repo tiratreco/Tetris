@@ -3,8 +3,8 @@
 #define Z_FUNDO 0
 #define Z_FRENTE 1
 
-#define N_VERTICE 15
-#define N_FACES 15
+#define N_VERTICE 16
+#define N_FACES 16
 float xa = -5;
 float ya = 0;
 float xb = -5;
@@ -34,6 +34,20 @@ struct moldura{
 
 moldura moldura;
 
+const GLfloat tex_coords[N_FACES][3][2] = {
+    {{0.0, 1.0}, {0.0, 0.0}, {0.5, 1.0}},
+    {{0.5, 0.5}, {0.0, 1.5}, {0.5, 1.5}},
+    {{0.0, 1.0}, {0.0, 0.0}, {0.5, 1.0}},
+    {{0.5, 0.5}, {0.0, 1.5}, {0.5, 1.5}},
+    {{1.0, 0.0}, {1.0, 0.2}, {0.0, 0.0}},
+    {{1.0, 0.0}, {0.0, 0.3}, {1.0, 0.3}},
+};
+
+
+const GLfloat quadrado_preto[2][3][3] = {
+    {{11.0, 0.0, 2.0}, {15.0, 0.0, 2.0}, {11.0, 10.5, 2.0}},
+    {{11.0, 10.5, 2.0}, {15.0, 0.0, 2.0}, {15.0, 10.5, 2.0}},
+};
 
 void normalizar(ponto * n){
 	GLfloat length;
@@ -233,6 +247,95 @@ void preencherMolduras(){
     }
 }
 
+void nome_tetris(){
+	//T
+	campo[1][1].ocupado=true;
+	campo[1][2].ocupado=true;
+	campo[1][3].ocupado=true;
+	campo[2][2].ocupado=true;
+	campo[3][2].ocupado=true;
+	campo[4][2].ocupado=true;
+	campo[5][2].ocupado=true;
+	for (int i=0;i<ALTURA;i++)
+		for (int j=0;j<BASE;j++)
+			if (campo[i][j].ocupado && campo[i][j].cor==BRANCO)
+				campo[i][j].cor=VERMELHO;
+	//E
+	campo[1][6].ocupado=true;
+	campo[1][7].ocupado=true;
+	campo[1][8].ocupado=true;
+	campo[2][6].ocupado=true;
+	campo[3][6].ocupado=true;
+	campo[3][7].ocupado=true;
+	campo[4][6].ocupado=true;
+	campo[5][6].ocupado=true;
+	campo[5][7].ocupado=true;
+	campo[5][8].ocupado=true;
+	for (int i=0;i<ALTURA;i++)
+		for (int j=0;j<BASE;j++)
+			if (campo[i][j].ocupado && campo[i][j].cor==BRANCO)
+				campo[i][j].cor=LARANJA;
+	//T
+	campo[7][1].ocupado=true;
+	campo[7][2].ocupado=true;
+	campo[7][3].ocupado=true;
+	campo[8][2].ocupado=true;
+	campo[9][2].ocupado=true;
+	campo[10][2].ocupado=true;
+	campo[11][2].ocupado=true;
+	for (int i=0;i<ALTURA;i++)
+		for (int j=0;j<BASE;j++)
+			if (campo[i][j].ocupado && campo[i][j].cor==BRANCO)
+				campo[i][j].cor=AZUL;
+	//R
+	campo[7][6].ocupado=true;
+	campo[7][7].ocupado=true;
+	campo[7][8].ocupado=true;
+	campo[8][6].ocupado=true;
+	campo[8][8].ocupado=true;
+	campo[9][6].ocupado=true;
+	campo[9][7].ocupado=true;
+	campo[10][6].ocupado=true;
+	campo[10][8].ocupado=true;
+	campo[11][6].ocupado=true;
+	campo[11][8].ocupado=true;
+	for (int i=0;i<ALTURA;i++)
+		for (int j=0;j<BASE;j++)
+			if (campo[i][j].ocupado && campo[i][j].cor==BRANCO)
+				campo[i][j].cor=CIANO;
+	//I
+	campo[13][1].ocupado=true;
+	campo[13][2].ocupado=true;
+	campo[13][3].ocupado=true;
+	campo[14][2].ocupado=true;
+	campo[15][2].ocupado=true;
+	campo[16][2].ocupado=true;
+	campo[17][1].ocupado=true;
+	campo[17][2].ocupado=true;
+	campo[17][3].ocupado=true;
+	for (int i=0;i<ALTURA;i++)
+		for (int j=0;j<BASE;j++)
+			if (campo[i][j].ocupado && campo[i][j].cor==BRANCO)
+				campo[i][j].cor=VERDE;
+	//S
+	campo[13][6].ocupado=true;
+	campo[13][7].ocupado=true;
+	campo[13][8].ocupado=true;
+	campo[14][6].ocupado=true;
+	campo[15][6].ocupado=true;
+	campo[15][7].ocupado=true;
+	campo[15][8].ocupado=true;
+	campo[16][8].ocupado=true;
+	campo[17][8].ocupado=true;
+	campo[17][7].ocupado=true;
+	campo[17][6].ocupado=true;
+	for (int i=0;i<ALTURA;i++)
+		for (int j=0;j<BASE;j++)
+			if (campo[i][j].ocupado && campo[i][j].cor==BRANCO)
+				campo[i][j].cor=ROXO;
+	
+}
+
 void preencherPontos(){
 	for (int i=0;i<ALTURA;i++){
 		for (int j=0;j<BASE;j++){
@@ -376,14 +479,59 @@ void calcularNormaisVertices(){
 		    }
 		}
 	}
-}        
+}
 
-void output(int x, int y, char *string){
+
+void output(GLfloat x, GLfloat y, GLfloat z, char *string){
   int len, i;
 
-  glRasterPos2f(x, y);
+  glRasterPos3f(x, y, z);
   len = (int) strlen(string);
   for (i = 0; i < len; i++) {
-    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, string[i]);
   }
+}
+
+
+void menu (){
+	nome_tetris();
+	glColor3f(1, 1, 1);
+	char* p = (char*) "Aperte backspace para iniciar";
+	output(10.0,0.8,2.0, p);
+	return;
+}
+
+void fim (){
+	
+	char* p;
+	char pont[10];
+	
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_TRIANGLES);
+	for (int k=0; k<2; k++){
+        glVertex3fv(quadrado_preto[k][0]);
+        glVertex3fv(quadrado_preto[k][1]);
+        glVertex3fv(quadrado_preto[k][2]);
+	}
+
+	glEnd();
+    
+	glColor3f(1.0, 1.0, 1.0);
+	p = (char*) "Fim de jogo";
+	output(0.0,3.4,3.0, p);
+	glColor3f(cores[PRETO][0], cores[PRETO][1], cores[PRETO][2]);
+	p = (char*) "Pontos: ";
+	output(11.0,3.1,3.0, p);
+	
+	itoa(pontos, pont, 10);
+	output(11.0,5.5,3.0, pont);
+	
+	p = (char*) "Tempo: ";
+	output(12.0,3.1,3.0, p);
+	
+	itoa(tempo_de_jogo/1000, pont, 10);
+	output(12.0,5.5,3.0, pont);
+	
+	p = (char*) "Aperte backspace para reiniciar";
+	output(13.0,0.5,3.0, p);
 }

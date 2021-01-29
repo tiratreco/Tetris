@@ -17,7 +17,6 @@
 		<File Name="main.cpp"/>
 		<File Name="tetris.h"/>
 		<File Name="data.h"/>
-		<File Name="lista.h"/>
 		<File Name="visual.h"/>
 	</Files>
 	<AppIcon>
