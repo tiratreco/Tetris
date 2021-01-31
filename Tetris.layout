@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout>
 	<Files>
-		<File Name="main.cpp" Top="Yes" Tabpos="1" TopLine="60">
-			<Cursor Line="81" Column="54"/>
+		<File Name="tetris.h" Top="No" Tabpos="1" TopLine="215">
+			<Cursor Line="232" Column="6"/>
+			<Selection Line="232" Column="18"/>
 		</File>
-		<File Name="tetris.h" Top="No" Tabpos="2" TopLine="72">
-			<Cursor Line="83" Column="57"/>
-		</File>
-		<File Name="data.h" Top="No" Tabpos="3" TopLine="56">
+		<File Name="data.h" Top="No" Tabpos="2" TopLine="56">
 			<Cursor Line="56" Column="2"/>
 			<Selection Line="56" Column="8"/>
 		</File>
-		<File Name="visual.h" Top="No" Tabpos="4" TopLine="20">
-			<Cursor Line="43" Column="27"/>
+		<File Name="visual.h" Top="No" Tabpos="3" TopLine="530">
+			<Cursor Line="560" Column="12"/>
+		</File>
+		<File Name="main.cpp" Top="Yes" Tabpos="4" TopLine="225">
+			<Cursor Line="237" Column="12"/>
 		</File>
 	</Files>
 </Layout>

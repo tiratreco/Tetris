@@ -7,13 +7,16 @@
 #include <math.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
+#include <mmsystem.h>
 #include "tetris.h"
-    
+
+bool musica = true;
+bool iluminacao = false;
 int mseg = 1;
 GLfloat perspectiva[4] = {16, 0, 1.0, 100.0};
 GLfloat camera[9] = {-32.0, 4.8, 45.0, 10.0, 5.0, 0.0, -99999.0, -3.0, -10.0};
 int indice = 0;
-int iluminacao=0;
 
 
 void init_glut(const char *window_name, int argc, char** argv);
@@ -24,7 +27,6 @@ void animate_callback(void);
 void timer_callback(int value);
 void keyboard_callback(unsigned char key, int x, int y);
 void info_modotexto();
-void keyboard_callback_special(int key, int x, int y);
 GLint LoadTexture( const char * filename );
 
 int main(int argc, char** argv){
@@ -49,7 +51,7 @@ void init_glut(const char *nome_janela, int argc, char** argv){
     glutInitWindowPosition(100,100);
     glutCreateWindow(nome_janela);
 	//glEnable(GL_LIGHTING);
-    //glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0);
     //ILUMINACAO PREJUDICA A VISUALIZACAO DO JOGO,
     //UTILIZAMOS OUTRA ALTERNATIVA
     
@@ -63,13 +65,12 @@ void init_glut(const char *nome_janela, int argc, char** argv){
     glutKeyboardFunc(keyboard_callback);
     glutDisplayFunc(display_callback);
     glutReshapeFunc(reshape_callback);
-    glutSpecialFunc(keyboard_callback_special);
     glutIdleFunc(animate_callback);
 	glutTimerFunc(mseg, timer_callback,mseg);
 
     /* Inicia a iluminação */
-    GLfloat light_position[4] = {-32.0, 4.8, 45.0, 0.0}; //posição da luz
-	GLfloat light_color[4] = {1.0, 1.0, 1.0, 1.0};//luz ambiente
+    GLfloat light_position[4] = {-100.0, 4.8, 45.0, 0.0}; //posição da luz
+	GLfloat light_color[4] = {0.5, 0.5, 0.5, 1.0};//luz ambiente
 	GLfloat diffuse[4] = {0.5, 0.5 , 0.5, 0.0};//luz difusa
 	GLfloat luzEspecular[4] = {1.0, 1.0, 1.0, 1.0};//luz especular
 	GLfloat especularidade[4] = {1.0, 1.0, 1.0, 1.0};// Capacidade de brilho do material
@@ -137,26 +138,10 @@ void mudarPerspectiva (char botao){
 	printf("%.2f\n", camera[indice]);
 }
 
-
-void keyboard_callback_special(int key, int x, int y){
-    switch(key){
-        case 1:
-            if (iluminacao==1){
-               iluminacao=0;
-               glDisable(GL_LIGHTING);
-            }else{
-               iluminacao=1;
-               glEnable(GL_LIGHTING);
-            }
-            break;
-        default:
-        	break;
-
-    }
-    glutPostRedisplay();
-}
-
 void draw_object_smooth(void){
+	if (iluminacao) glEnable(GL_LIGHTING);
+	else glDisable(GL_LIGHTING);
+		
 	if (estado==MENU){
 		menu();
 	}
@@ -202,7 +187,7 @@ void draw_object_smooth(void){
 			glEnd();
 		}
     }
-    
+    if (estado==EM_JOGO)mostrarPontos();
     if (estado==FIM){
 		fim();
 	}
@@ -231,18 +216,33 @@ void info_modotexto(){
 
 void keyboard_callback(unsigned char key, int x, int y){
 	if (key == 27) exit(0);
+	if (key == '2'){//iluminacao
+		iluminacao=!iluminacao;
+	}
 	else if (key == ' '){
-		if (estado==MENU) estado = INICIANDO;
+		if (estado==MENU) {
+			estado = INICIANDO;
+			PlaySound("TETRIS_THEME_SONG.wav", NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);
+		}
 		else if(estado==FIM) {
 			estado = MENU;	
 			limparCampo();
+			PlaySound("tic.wav", NULL, SND_ASYNC|SND_FILENAME);
 		}
 	}
 	if (estado!=EM_JOGO) return;
 	if (key == 'a' || key == 'A') mover(ESQUERDA);
 	else if (key == 'd' || key == 'D') mover(DIREITA);
-	else if (key == 's' || key == 'S') descerFigura();
+	else if (key == 's' || key == 'S') {
+		pontos+=10;
+		descerFigura();
+	}
 	else if (key == 'w' || key == 'W') rotacionar();
+	else if (key == '1'){//musica
+		if (musica) PlaySound("tic.wav", NULL, SND_ASYNC|SND_FILENAME);
+		else PlaySound("TETRIS_THEME_SONG.wav", NULL, SND_ASYNC|SND_FILENAME|SND_LOOP);
+		musica = !musica;
+	}
 	
 	//else if (key == 'a' || key == 'A') mudarPerspectiva ('a');
 	//else if (key == 'd' || key == 'D') mudarPerspectiva ('d');
@@ -288,3 +288,4 @@ GLint LoadTexture( const char * filename )
 
   return texture;
 }
+

@@ -45,8 +45,13 @@ const GLfloat tex_coords[N_FACES][3][2] = {
 
 
 const GLfloat quadrado_preto[2][3][3] = {
-    {{11.0, 0.0, 2.0}, {15.0, 0.0, 2.0}, {11.0, 10.5, 2.0}},
-    {{11.0, 10.5, 2.0}, {15.0, 0.0, 2.0}, {15.0, 10.5, 2.0}},
+    {{11.0, -0.5, 2.0}, {15.0, -0.5, 2.0}, {11.0, 10.5, 2.0}},
+    {{11.0, 10.5, 2.0}, {15.0, -0.5, 2.0}, {15.0, 10.5, 2.0}},
+};
+
+const GLfloat fundo_pontos[2][3][3] = {
+	{{5.0, -4, 2.0}, {6.0, -4.0, 2.0}, {5.0, -0.5, 2.0}},
+	{{5.0, -0.5, 2.0}, {6.0, -4.0, 2.0}, {6.0, -0.5, 2.0}},
 };
 
 void normalizar(ponto * n){
@@ -515,11 +520,11 @@ void fim (){
 	}
 
 	glEnd();
-    
-	glColor3f(1.0, 1.0, 1.0);
+	
+    glColor3f(cores[PRETO][0], cores[PRETO][1], cores[PRETO][2]);
 	p = (char*) "Fim de jogo";
 	output(0.0,3.4,3.0, p);
-	glColor3f(cores[PRETO][0], cores[PRETO][1], cores[PRETO][2]);
+	
 	p = (char*) "Pontos: ";
 	output(11.0,3.1,3.0, p);
 	
@@ -534,4 +539,26 @@ void fim (){
 	
 	p = (char*) "Aperte backspace para reiniciar";
 	output(13.0,0.5,3.0, p);
+}
+
+void mostrarPontos(){
+	char pont[10];
+	
+	glColor3f(1.0, 1.0, 1.0);
+	glBegin(GL_TRIANGLES);
+	for (int k=0; k<2; k++){
+        glVertex3fv(fundo_pontos[k][0]);
+        glVertex3fv(fundo_pontos[k][1]);
+        glVertex3fv(fundo_pontos[k][2]);
+	}
+
+	glEnd();
+    
+	glColor3f(0.0, 0.0, 0.0);
+
+	itoa(pontos, pont, 10);
+	output(4.8,-3.5,3.0, pont);
+
+	
+
 }

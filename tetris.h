@@ -80,7 +80,7 @@ void atualizarFigura(){
 bool inserirFigura(int id){
 	bool vivo = true;
 	for (int i=0;i<4;i++){
-		if(campo[figura_atual.x[i]][figura_atual.y[i]].ocupado){
+		if(campo[figuras[id].y[i]][figura_atual.x[i]].ocupado){
 			tempo_de_jogo = clock()-tempo_inicio;
 			vivo = false;
 		}
@@ -210,7 +210,7 @@ int tiraLinhas(){
 			}
 		}
 		if (apagar){
-			pontos++; 
+			pontos+=1000; 
 			velocidade*=0.98;
 			for (int j=0;j<BASE;j++) {
 				campo[i][j].ocupado = false;
@@ -239,7 +239,10 @@ void descerFigura(){
 		mover(BAIXO);
 	}
 	atualizarFigura();
-	if (!vivo) estado = FIM;
+	if (!vivo) {
+		PlaySound("perdeu.wav", NULL, SND_ASYNC|SND_FILENAME);
+		estado = FIM;
+	}
 }
 
 void jogo(){
@@ -252,9 +255,10 @@ void jogo(){
 	}
 	if (estado==EM_JOGO){
 		if (clock() - tempo < velocidade)return;
+		
 		descerFigura();
 		//printf("%d\n", pontos);
-		exibir();
+		//exibir();
 		tempo = clock();
 		return;
 	}
